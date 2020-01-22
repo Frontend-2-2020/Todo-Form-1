@@ -3,11 +3,14 @@ import PropTypes from "prop-types";
 
 class List extends Component {
   render() {
-    const { todos } = this.props;
+    const { todos, setActiveTodo } = this.props;
     return (
       <ul>
-        {todos.map(todo => (
-          <li key={todo.id}>{todo.name}</li>
+        {todos.map((todo, index) => (
+          <li key={todo.id}>
+            <button onClick={() => setActiveTodo(index)}>edit</button>{" "}
+            {todo.name}
+          </li>
         ))}
       </ul>
     );

@@ -7,6 +7,7 @@ import TodoForm from "./TodoForm";
 class App extends Component {
   state = {
     todos: [],
+    activeTodo: undefined,
     defaultValues: {
       name: "",
       done: false
@@ -17,6 +18,12 @@ class App extends Component {
     this.getData();
   }
 
+  setActiveTodo = index => {
+    this.setState({
+      activeTodo: this.state.todos[index]
+    });
+  };
+
   getData = () => {
     Axios.get("http://5de80f759578cb001487adea.mockapi.io/Todo").then(
       response => {
@@ -26,13 +33,28 @@ class App extends Component {
   };
 
   handleSubmit = (values, actions) => {
-    Axios.post("http://5de80f759578cb001487adea.mockapi.io/Todo", values).then(
-      response => {
+    if (values.id) {
+      // updaten
+      Axios.put(
+        "http://5de80f759578cb001487adea.mockapi.io/Todo/" + values.id,
+        values
+      ).then(response => {
         this.getData();
         actions.setSubmitting(false);
         actions.resetForm();
-      }
-    );
+        this.setState({ activeTodo: undefined });
+      });
+    } else {
+      // createn
+      Axios.post(
+        "http://5de80f759578cb001487adea.mockapi.io/Todo",
+        values
+      ).then(response => {
+        this.getData();
+        actions.setSubmitting(false);
+        actions.resetForm();
+      });
+    }
   };
 
   validateForm = values => {
@@ -46,7 +68,7 @@ class App extends Component {
   };
 
   render() {
-    const { todos, defaultValues } = this.state;
+    const { todos, defaultValues, activeTodo } = this.state;
     return (
       <div>
         <nav className="navbar navbar-light bg-light">
@@ -58,7 +80,7 @@ class App extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8">
-              <List todos={todos} />
+              <List todos={todos} setActiveTodo={this.setActiveTodo} />
             </div>
             <div className="col-md-4">
               <Formik
@@ -66,7 +88,7 @@ class App extends Component {
                 initialValues={defaultValues}
                 validate={this.validateForm}
               >
-                {props => <TodoForm {...props} />}
+                {props => <TodoForm {...props} activeTodo={activeTodo} />}
               </Formik>
             </div>
           </div>

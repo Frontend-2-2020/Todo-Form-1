@@ -4,8 +4,16 @@ import { Form, Field } from "formik";
 import CustomInput from "./CustomInput";
 
 class TodoForm extends Component {
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.activeTodo !== this.props.activeTodo &&
+      this.props.activeTodo
+    ) {
+      this.props.setValues(this.props.activeTodo);
+    }
+  }
   render() {
-    console.log(this.props);
+    console.log(this.props.activeTodo);
     return (
       <Form>
         <CustomInput name="name" label="Title" />
@@ -22,7 +30,7 @@ class TodoForm extends Component {
           className="btn btn-primary"
           disabled={this.props.isSubmitting}
         >
-          Add Todo
+          {this.props.activeTodo ? "Edit Todo" : "Add Todo"}
         </button>
       </Form>
     );
