@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import List from "./List";
 import Axios from "axios";
-import { Formik } from "formik";
-import TodoForm from "./TodoForm";
+import TodoFormContainer from "./TodoFormContainer";
 
 class App extends Component {
   state = {
@@ -57,15 +56,7 @@ class App extends Component {
     }
   };
 
-  validateForm = values => {
-    const errors = {};
-
-    if (!values.name) {
-      errors.name = "Required";
-    }
-
-    return errors;
-  };
+  
 
   render() {
     const { todos, defaultValues, activeTodo } = this.state;
@@ -83,13 +74,19 @@ class App extends Component {
               <List todos={todos} setActiveTodo={this.setActiveTodo} />
             </div>
             <div className="col-md-4">
-              <Formik
-                onSubmit={this.handleSubmit}
-                initialValues={defaultValues}
-                validate={this.validateForm}
-              >
-                {props => <TodoForm {...props} activeTodo={activeTodo} />}
-              </Formik>
+              <TodoFormContainer 
+                defaultValues={defaultValues} 
+                handleSubmit={this.handleSubmit}
+                activeTodo={activeTodo}
+                buttonText="Edit Todo"
+              />
+
+              <TodoFormContainer 
+                defaultValues={defaultValues} 
+                activeTodo={activeTodo}
+                handleSubmit={this.handleSubmit}
+                buttonText="Create Todo"
+              />
             </div>
           </div>
         </div>

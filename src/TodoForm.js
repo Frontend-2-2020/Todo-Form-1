@@ -30,7 +30,7 @@ class TodoForm extends Component {
           className="btn btn-primary"
           disabled={this.props.isSubmitting}
         >
-          {this.props.activeTodo ? "Edit Todo" : "Add Todo"}
+          {this.props.buttonText}
         </button>
       </Form>
     );
